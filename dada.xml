@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <remote name="xiaomi-dada" fetch="https://github.com/xiaomi-dada" revision="lineage-24.0" />
+
+  <!-- Device and vendor trees -->
+  <project path="device/xiaomi/dada"          name="device_xiaomi_dada"          remote="xiaomi-dada" />
+  <project path="device/xiaomi/sm8750-common" name="device_xiaomi_sm8750-common" remote="xiaomi-dada" />
+  <project path="vendor/xiaomi/dada"          name="vendor_xiaomi_dada"          remote="xiaomi-dada" />
+  <project path="vendor/xiaomi/sm8750-common" name="vendor_xiaomi_sm8750-common" remote="xiaomi-dada" />
+
+  <!--
+      Kernel, built from source: CLO KERNEL.PLATFORM.4.0.r1-18500 with
+      LineageOS and Xiaomi changes, the LA.VENDOR.15.4.0.r1-21700 techpacks and
+      device trees.
+  -->
+  <project path="kernel/xiaomi/sm8750"             name="android_kernel_xiaomi_sm8750"             remote="xiaomi-dada" />
+  <project path="kernel/xiaomi/sm8750-devicetrees" name="android_kernel_xiaomi_sm8750-devicetrees" remote="xiaomi-dada" />
+  <project path="kernel/xiaomi/sm8750-modules"     name="android_kernel_xiaomi_sm8750-modules"     remote="xiaomi-dada" />
+
+  <!--
+      hardware/xiaomi is not in the upstream manifest, so it is added rather
+      than replaced.  It carries the Qualcomm and Goodix ultrasonic fingerprint
+      HAL modules, the MiSys camera file service, the SPI IR HAL and the
+      PowerShare HAL on top of upstream.
+  -->
+  <project path="hardware/xiaomi" name="android_hardware_xiaomi" remote="xiaomi-dada" />
+
+  <!--
+      CAF display: getDisplayAttributes indexed like getConfigCount, the opt-in
+      xiaomi_rgb_notifier hook that feeds the under-display light sensor, and
+      panels reporting their size in tenths of a millimetre.
+  -->
+  <remove-project path="hardware/qcom-caf/sm8750/display/core" />
+  <remove-project path="hardware/qcom-caf/sm8750/display/hal" />
+  <remove-project path="hardware/qcom-caf/sm8750/display/intf" />
+  <project path="hardware/qcom-caf/sm8750/display/core" name="android_vendor_qcom_opensource_display-core" remote="xiaomi-dada" revision="lineage-24.0-caf-sm8750" groups="qcom" />
+  <project path="hardware/qcom-caf/sm8750/display/hal"  name="android_hardware_qcom_display"               remote="xiaomi-dada" revision="lineage-24.0-caf-sm8750" groups="qcom" />
+  <project path="hardware/qcom-caf/sm8750/display/intf" name="android_vendor_qcom_opensource_display-intf" remote="xiaomi-dada" revision="lineage-24.0-caf-sm8750" groups="qcom" />
+
+  <!--
+      frameworks/av: let the Xiaomi camera use the vendor sizes of its
+      implementation defined streams.
+  -->
+  <remove-project path="frameworks/av" />
+  <project path="frameworks/av" name="android_frameworks_av" remote="xiaomi-dada" groups="pdk,sysui-studio" />
+
+  <!--
+      frameworks/native: don't protect the client target for protected camera
+      layers, which the kernel rejects next to secure camera planes (face
+      unlock preview).
+  -->
+  <remove-project path="frameworks/native" />
+  <project path="frameworks/native" name="android_frameworks_native" remote="xiaomi-dada" groups="pdk,sysui-studio" />
+
+  <!--
+      Trusted VM: Qualcomm's qcrosvm launcher and the crosvm, rutabaga_gfx and
+      Virtualization crates it builds against, made available to the platform.
+  -->
+  <remove-project path="external/crosvm" />
+  <remove-project path="external/rust/rutabaga_gfx" />
+  <remove-project path="packages/modules/Virtualization" />
+  <project path="external/crosvm"                 name="android_external_crosvm"                     remote="xiaomi-dada" groups="pdk" />
+  <project path="external/rust/rutabaga_gfx"      name="android_external_rust_rutabaga_gfx"          remote="xiaomi-dada" groups="pdk" />
+  <project path="packages/modules/Virtualization" name="android_packages_modules_Virtualization"     remote="xiaomi-dada" groups="pdk" />
+  <project path="vendor/qcom/opensource/crosvm-gunyah" name="android_vendor_qcom_opensource_crosvm-gunyah" remote="xiaomi-dada" />
+</manifest>
