@@ -16,15 +16,29 @@ lunch lineage_dada-cp2a-userdebug
 m bacon
 ```
 
-`repo init --git-lfs` is required: both vendor trees store their largest blobs
-in git-lfs, and without it they sync as pointer files.
+`repo init --git-lfs` is required: both vendor trees and `vendor/gapps` store
+their largest blobs in git-lfs, and without it they sync as pointer files.
+
+For the build with GApps built in (MindTheGapps), set `WITH_GMS=true`. Keep each
+build in its own output directory so the two never mix, and make `out` a symlink
+to the one being built: LineageOS builds the kernel with relative paths only when
+`OUT_DIR` is `out`, and Siso needs a relative `OUT_DIR` inside the source tree.
+
+```bash
+mkdir -p out-vanilla out-gapps
+ln -sfn out-gapps out
+export WITH_GMS=true
+lunch lineage_dada-cp2a-userdebug
+m bacon
+```
 
 ## What this manifest does
 
 | Path | Source | Why |
 |---|---|---|
 | `device/xiaomi/{dada,sm8750-common}` | `xiaomi-dada` | device trees |
-| `vendor/xiaomi/{dada,sm8750-common}` | `xiaomi-dada` | proprietary blobs and firmware images |
+| `vendor/xiaomi/{dada,sm8750-common}` | `xiaomi-dada` | proprietary blobs |
+| `vendor/gapps` | MindTheGapps | GApps for the `WITH_GMS=true` build |
 | `kernel/xiaomi/sm8750{,-devicetrees,-modules}` | `xiaomi-dada` | kernel, device trees and techpack modules, built from source (latest CLO for SM8750 plus LineageOS and Xiaomi changes) |
 | `hardware/xiaomi` | `xiaomi-dada` fork | ultrasonic fingerprint HAL modules, MiSys camera file service, SPI IR HAL, PowerShare HAL |
 | `hardware/qcom-caf/sm8750/display/{core,hal,intf}` | `xiaomi-dada` forks | display attributes by hardware config index, light sensor frame notifier, panel size in tenths of a millimetre |
