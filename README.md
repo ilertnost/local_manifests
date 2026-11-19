@@ -36,8 +36,8 @@ m -j8 evolution
 ```
 
 `repo init --git-lfs` is required: the vendor trees store their largest blobs
-in Git LFS. On machines with less RAM use `-j8` (or lower) to keep r8/d8 from
-being OOM-killed; add swap if needed.
+in Git LFS. The commands above use `-j8`; raise it if the machine has enough
+RAM, lower it if r8/d8 get OOM-killed, and add swap if needed.
 
 The kernel is built with clang `r614150`
 (`TARGET_KERNEL_CLANG_VERSION` in `device/xiaomi/sm8750-common`). The prebuilt
