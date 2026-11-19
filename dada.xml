@@ -1,73 +1,106 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Local manifest for the Xiaomi 15 (dada, SM8750) Evolution X 17 build.
+
+  Apply on top of the Evolution X manifest (repo init -b cnb).  All
+  device-specific repositories live under https://github.com/ilertnost; the
+  remaining projects keep their upstream owners.
+-->
 <manifest>
+  <remote name="ilertnost" fetch="https://github.com/ilertnost" />
   <remote name="xiaomi-dada" fetch="https://github.com/xiaomi-dada" revision="lineage-24.0" />
-  <remote name="mindthegapps" fetch="https://gitlab.com/MindTheGapps" />
 
-  <!-- Device and vendor trees -->
-  <project path="device/xiaomi/dada"          name="device_xiaomi_dada"          remote="xiaomi-dada" />
-  <project path="device/xiaomi/sm8750-common" name="device_xiaomi_sm8750-common" remote="xiaomi-dada" />
-  <project path="vendor/xiaomi/dada"          name="vendor_xiaomi_dada"          remote="xiaomi-dada" />
-  <project path="vendor/xiaomi/sm8750-common" name="vendor_xiaomi_sm8750-common" remote="xiaomi-dada" />
-
-  <!--
-      Kernel, built from source: CLO KERNEL.PLATFORM.4.0.r1-18500 with
-      LineageOS and Xiaomi changes, the LA.VENDOR.15.4.0.r1-21700 techpacks and
-      device trees.
-  -->
-  <project path="kernel/xiaomi/sm8750"             name="android_kernel_xiaomi_sm8750"             remote="xiaomi-dada" />
-  <project path="kernel/xiaomi/sm8750-devicetrees" name="android_kernel_xiaomi_sm8750-devicetrees" remote="xiaomi-dada" />
-  <project path="kernel/xiaomi/sm8750-modules"     name="android_kernel_xiaomi_sm8750-modules"     remote="xiaomi-dada" />
+  <!-- Device tree, common tree and proprietary blobs -->
+  <project path="device/xiaomi/dada" name="device_xiaomi_dada" remote="ilertnost" revision="lineage-24.0" />
+  <project path="device/xiaomi/sm8750-common" name="device_xiaomi_sm8750-common" remote="ilertnost" revision="lineage-24.0" />
+  <project path="vendor/xiaomi/dada" name="vendor_xiaomi_dada" remote="ilertnost" revision="lineage-24.0" />
+  <project path="vendor/xiaomi/sm8750-common" name="vendor_xiaomi_sm8750-common" remote="ilertnost" revision="lineage-24.0" />
 
   <!--
-      hardware/xiaomi is not in the upstream manifest, so it is added rather
-      than replaced.  It carries the Qualcomm and Goodix ultrasonic fingerprint
-      HAL modules, the MiSys camera file service, the SPI IR HAL and the
-      PowerShare HAL on top of upstream.
+      Kernel, built from source (CLO KERNEL.PLATFORM.4.0.r1-18500 with the
+      LineageOS/Xiaomi changes).  lineage-24.0-oss is the Android 17 / GKI
+      branch.
   -->
-  <project path="hardware/xiaomi" name="android_hardware_xiaomi" remote="xiaomi-dada" />
+  <project path="kernel/xiaomi/sm8750" name="android_kernel_qcom_sm8750" remote="ilertnost" revision="lineage-24.0-oss" />
+  <project path="kernel/xiaomi/sm8750-devicetrees" name="android_kernel_xiaomi_sm8750-devicetrees" remote="ilertnost" revision="lineage-24.0" />
+  <project path="kernel/xiaomi/sm8750-modules" name="android_kernel_xiaomi_sm8750-modules" remote="ilertnost" revision="lineage-24.0" />
 
   <!--
-      CAF display: getDisplayAttributes indexed like getConfigCount, the opt-in
-      xiaomi_rgb_notifier hook that feeds the under-display light sensor, and
-      panels reporting their size in tenths of a millimetre.
+      Not in the upstream manifest: the ultrasonic fingerprint, MiSys camera
+      and IR HALs on top of the stock AOSP/Lineage hardware/xiaomi.
   -->
-  <remove-project path="hardware/qcom-caf/sm8750/display/core" />
-  <remove-project path="hardware/qcom-caf/sm8750/display/hal" />
-  <remove-project path="hardware/qcom-caf/sm8750/display/intf" />
-  <project path="hardware/qcom-caf/sm8750/display/core" name="android_vendor_qcom_opensource_display-core" remote="xiaomi-dada" revision="lineage-24.0-caf-sm8750" groups="qcom" />
-  <project path="hardware/qcom-caf/sm8750/display/hal"  name="android_hardware_qcom_display"               remote="xiaomi-dada" revision="lineage-24.0-caf-sm8750" groups="qcom" />
-  <project path="hardware/qcom-caf/sm8750/display/intf" name="android_vendor_qcom_opensource_display-intf" remote="xiaomi-dada" revision="lineage-24.0-caf-sm8750" groups="qcom" />
+  <project path="hardware/xiaomi" name="android_hardware_xiaomi" remote="ilertnost" revision="lineage-24.0" />
 
   <!--
-      frameworks/av: let the Xiaomi camera use the vendor sizes of its
-      implementation defined streams.
+      Display stack.  The sm8750 CAF display hal is replaced by the fork with
+      getDisplayAttributes indexed like getConfigCount, the xiaomi_rgb_notifier
+      hook and panels reporting their size in tenths of a millimetre.
+      The CAF copies of display/core and display/intf are dropped: the same
+      modules come from the open-source sdm/sde-drm and display-intf projects.
   -->
-  <remove-project path="frameworks/av" />
-  <project path="frameworks/av" name="android_frameworks_av" remote="xiaomi-dada" groups="pdk,sysui-studio" />
+  <remove-project name="LineageOS/android_hardware_qcom_display"
+                  path="hardware/qcom-caf/sm8750/display/hal" />
+  <remove-project name="LineageOS/android_vendor_qcom_opensource_display-core"
+                  path="hardware/qcom-caf/sm8750/display/core" />
+  <remove-project name="LineageOS/android_vendor_qcom_opensource_display-intf"
+                  path="hardware/qcom-caf/sm8750/display/intf" />
+
+  <project path="hardware/qcom-caf/sm8750/display/hal"
+           name="android_hardware_qcom_display"
+           remote="ilertnost"
+           revision="lineage-24.0-caf-sm8750" />
+  <project path="vendor/qcom/opensource/display-core"
+           name="android_vendor_qcom_opensource_display-core"
+           remote="ilertnost"
+           revision="lineage-24.0-caf-sm8750" />
+  <project path="vendor/qcom/opensource/display-intf"
+           name="android_vendor_qcom_opensource_display-intf"
+           remote="ilertnost"
+           revision="lineage-24.0-caf-sm8750" />
 
   <!--
-      frameworks/native: don't protect the client target for protected camera
-      layers, which the kernel rejects next to secure camera planes (face
-      unlock preview).
+      Camera fixes: let the Xiaomi camera use the vendor sizes of its
+      implementation defined streams (frameworks/av), and don't protect the
+      client target for protected camera layers (frameworks/native).
   -->
-  <remove-project path="frameworks/native" />
-  <project path="frameworks/native" name="android_frameworks_native" remote="xiaomi-dada" groups="pdk,sysui-studio" />
+  <remove-project name="frameworks_av" path="frameworks/av" />
+  <project path="frameworks/av"
+           name="android_frameworks_av"
+           remote="ilertnost"
+           revision="cnb"
+           groups="pdk,sysui-studio" />
+
+  <remove-project name="frameworks_native" path="frameworks/native" />
+  <project path="frameworks/native"
+           name="android_frameworks_native"
+           remote="ilertnost"
+           revision="cnb"
+           groups="pdk,sysui-studio" />
 
   <!--
-      Trusted VM: Qualcomm's qcrosvm launcher and the crosvm, rutabaga_gfx and
-      Virtualization crates it builds against, made available to the platform.
+      Trusted VM (qcrosvm): crosvm, rutabaga_gfx and the Virtualization apex,
+      made available to the platform, plus Qualcomm's launcher.
   -->
-  <remove-project path="external/crosvm" />
-  <remove-project path="external/rust/rutabaga_gfx" />
-  <remove-project path="packages/modules/Virtualization" />
-  <project path="external/crosvm"                 name="android_external_crosvm"                     remote="xiaomi-dada" groups="pdk" />
-  <project path="external/rust/rutabaga_gfx"      name="android_external_rust_rutabaga_gfx"          remote="xiaomi-dada" groups="pdk" />
-  <project path="packages/modules/Virtualization" name="android_packages_modules_Virtualization"     remote="xiaomi-dada" groups="pdk" />
-  <project path="vendor/qcom/opensource/crosvm-gunyah" name="android_vendor_qcom_opensource_crosvm-gunyah" remote="xiaomi-dada" />
+  <remove-project name="platform/external/crosvm" path="external/crosvm" />
+  <remove-project name="platform/external/rust/rutabaga_gfx" path="external/rust/rutabaga_gfx" />
+  <remove-project name="platform/packages/modules/Virtualization" path="packages/modules/Virtualization" />
 
-  <!--
-      GApps for the WITH_GMS=true build (Android 17 branch). The apps are
-      stored with Git LFS, so git-lfs must be installed before syncing.
-  -->
-  <project path="vendor/gapps" name="vendor_gapps" remote="mindthegapps" revision="cinnamonbun" clone-depth="1" />
+  <project path="external/crosvm"
+           name="android_external_crosvm"
+           remote="ilertnost"
+           revision="cnb"
+           groups="pdk" />
+  <project path="external/rust/rutabaga_gfx"
+           name="android_external_rust_rutabaga_gfx"
+           remote="ilertnost"
+           revision="lineage-24.0"
+           groups="pdk" />
+  <project path="packages/modules/Virtualization"
+           name="android_packages_modules_Virtualization"
+           remote="ilertnost"
+           revision="lineage-24.0"
+           groups="pdk" />
+  <project path="vendor/qcom/opensource/crosvm-gunyah"
+           name="android_vendor_qcom_opensource_crosvm-gunyah"
+           remote="xiaomi-dada" />
 </manifest>
