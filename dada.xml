@@ -103,4 +103,18 @@
   <project path="vendor/qcom/opensource/crosvm-gunyah"
            name="android_vendor_qcom_opensource_crosvm-gunyah"
            remote="xiaomi-dada" />
+
+  <!-- Dolby Atmos (HyperOS 4 dada ODM tuning & Xiaomi prebuilt AIDL ABI) -->
+  <project path="hardware/dolby"
+           name="android_hardware_dolby"
+           remote="ilertnost"
+           revision="lineage-24.0" />
+
+  <!-- Bluetooth stack with QTI aptX Adaptive offload and LE Audio HAL fixes -->
+  <remove-project name="packages_modules_Bluetooth" path="packages/modules/Bluetooth" />
+  <project path="packages/modules/Bluetooth"
+           name="android_packages_modules_Bluetooth"
+           remote="ilertnost"
+           revision="cnb"
+           groups="pdk" />
 </manifest>

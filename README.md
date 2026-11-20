@@ -70,6 +70,8 @@ The finished OTA is written to
 | `external/rust/rutabaga_gfx` | `ilertnost/android_external_rust_rutabaga_gfx` | Trusted VM graphics |
 | `packages/modules/Virtualization` | `ilertnost/android_packages_modules_Virtualization` | Trusted VM apex |
 | `vendor/qcom/opensource/crosvm-gunyah` | `xiaomi-dada/android_vendor_qcom_opensource_crosvm-gunyah` | Qualcomm qcrosvm launcher (not upstream) |
+| `hardware/dolby` | [`ilertnost/android_hardware_dolby`](https://github.com/ilertnost/android_hardware_dolby) | Dolby Atmos with `dada` ODM tuning and Xiaomi prebuilt AIDL ABI |
+| `packages/modules/Bluetooth` | [`ilertnost/android_packages_modules_Bluetooth`](https://github.com/ilertnost/android_packages_modules_Bluetooth) | QTI aptX Adaptive offload, `AVDT_CODEC_SIZE` and LE Audio HAL fixes |
 
 The CAF copies of `hardware/qcom-caf/sm8750/display/{core,intf}` are removed:
 the open-source `vendor/qcom/opensource/display-*` projects provide the same
